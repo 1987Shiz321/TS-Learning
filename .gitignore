@@ -1,3 +1,15 @@
+# Node
 node_modules/
-desktop.ini
-.DS_Store
+npm-debug.log
+.env
+
+# TypeScript
+# コンパイルされたJavaScriptファイルとマップファイル
+dist/
+build/
+*.js
+*.js.map
+
+# 型定義ファイルとマップファイル (必要な場合)
+*.d.ts
+*.d.ts.map
