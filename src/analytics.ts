@@ -1,1 +1,5 @@
-console.log('データ送信中...');
+function sendAnalytics(data: string) {
+    console.log(data);
+}
+
+sendAnalytics('原直樹');

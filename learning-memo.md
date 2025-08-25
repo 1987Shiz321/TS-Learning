@@ -71,3 +71,76 @@ const product = {
   }
 }
 ```
+
+# 250825
+## 49. letとconst
+
+|              | const    | let    | var       |
+| -------------- | -------- | -------- | --------- |
+| 再宣言         | x        | x        | o         |
+| 最代入         | x        | o        | o         |
+| スコープ       | ブロック | ブロック | 関数      |
+| ホイスティング | エラー   | エラー   | undefined |
+
+### ざっくりした結論
+参考にしたサイト\
+[https://qiita.com/cheez921/items/7b57835cb76e70dd0fc4](https://qiita.com/cheez921/items/7b57835cb76e70dd0fc4)
+
+-  ほぼ全部constで定義できる
+    - オブジェクトや配列の値の変更は再代入にはならないため。
+-  プリミティブ型を再代入したい場合はlet
+-  varはもう使わない
+
+### スコープの理解
+
+実行中のコードから参照できる範囲をスコープといいます。\
+`const/let`はブロックスコープ({}で囲われた部分 - if文やfor文など)が適用されますが、`var`はブロックスコープが適用されません。\
+※ 関数スコープ(関数宣言の{})は、`var/const/let`すべてに適用されます。
+
+```typescript
+//var
+{
+  var a = 0;
+}
+// ブロックスコープが適用されないため、ブロック外でも値の参照が可能
+console.log(a); // 0
+
+//let
+{
+  // ブロックスコープにより、再宣言にならない。
+  let a = 1;
+  console.log(a); // 1
+}
+// letはブロックスコープであり参照できないため、varで宣言した値が参照される。
+console.log(a); // 0
+
+// const
+{
+  const b = 2;
+  console.log(b); //2
+}
+// constはブロックスコープであり参照できない。
+// また、bはブロック内ではじめて宣言されたため、ブロック外から読みこもうとすると
+// 一度も宣言されていないものとして捉え、undefinedとなる。
+console.log(b) // b is not defined 
+```
+
+### ホイスティング(変数の巻き上げ)
+変数宣言が常に関数の先頭で行われたことにされる挙動を **ホイスティング(変数の巻き上げ)** といいいます。
+```typescript
+// var
+{
+  console.log(a); // undefined
+  var a = 0; 
+  console.log(a); // 0
+}
+
+// let / const
+{
+  //初期化前のbにアクセスできるわけがないよ、とエラーを出す
+  console.log(b); // Cannot access 'b' before initialization 
+  const b = 0; 
+  //初期化後はアクセスできるので、0が表示される。
+  console.log(b); // 0
+}
+```
