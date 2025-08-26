@@ -1,52 +1,61 @@
-//アロー関数の練習
-// const add = (a: number, b: number) => a + b;
+// クラスの頭文字は大文字で始めるのが慣例
+class Department {
+    name: string;
+    // privateはクラスの中でしかアクセスできない
+    private employees: string[] = [];
 
-// const printOutput: (output: string | number ) => void = output => console.log(output);
+    constructor(n: string) {
+        this.name = n;
+    }
+
+    // メソッドちゃん
+    // thisはDepartmentクラスから呼び出されないといけない
+    // このようにすると、クラスの外から呼び出されたときにエラーになる
+    describe(this: Department) {
+        //クラスの中からプロパティにアクセスするにはthisを使う
+        console.log('Department: ' + this.name);        
+    }
+
+    // 社員を追加するメソッド
+    addEmployee(employee: string) {
+        this.employees.push(employee);
+    }
+
+    // 社員情報を表示するメソッド
+    printEmployeeInformation() {
+        console.log(this.employees.length);
+        console.log(this.employees);
+    }
+}
+// インスタンス化
+// newクラス名()でインスタンス化できる
+// インスタンス化したオブジェクトを変数に格納する
+const accounting = new Department('saino');
+
+accounting.addEmployee('mkwiimatsumoto');
+accounting.addEmployee('kazuki23650214');
 
 
-// printOutput(add(5, 12));
 
-const button = document.querySelector('button')!;
+accounting.describe();
+accounting.printEmployeeInformation();
 
-if (button) {
-    button.addEventListener('click', event => console.log(event));
+// const accountingCopy = {
+//     name: 'mkwiimatsumoto',
+//     describe: accounting.describe
+// };
+
+// accountingCopy.describe(); //undefinedになる
+
+// ウマ娘の名前と二つ名を格納するクラス
+class Umamusume {
+    private name: string;
+    private subtitle: string;
+    constructor(name: string, sub: string) {
+        this.name = name;
+        this.subtitle = sub;
+    }    
 }
 
-//スプレッド演算子の練習
-const hobbies = ['Sports', 'Cooking'];
-const activeHobbies = ['Hiking'];
-
-// constで定義した配列はpushで要素を追加できる
-activeHobbies.push(...hobbies);
-
-//オブジェクトの定義
-const person = {
-    firstname: 'Max',
-    age: 30
-};
-
-//オブジェクトのコピー
-const copiedPerson = {
-    ...person
-};
-console.log(copiedPerson);
-
-//可変長引数の練習
-//...numbersは配列として受け取る
-const add = (...numbers: number[]) => {
-    return numbers.reduce((curResult, curValue) => {
-        return curResult + curValue;
-    }, 0);
-};
-
-const addedNumbers = add(5, 10, 2, 3.7);
-console.log(addedNumbers);
-
-//分割代入の練習
-const [hobby1, hobby2] = hobbies;
-
-console.log(hobby1, hobby2);
-
-const {firstname: userName, age} = person;
-
-console.log(userName, age, person);
+const uma = new Umamusume('ラヴズオンリーユー', '9927 Wishes');
+console.log(uma);
