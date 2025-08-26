@@ -1,11 +1,11 @@
 // クラスの頭文字は大文字で始めるのが慣例
 class Department {
-    name: string;
     // privateはクラスの中でしかアクセスできない
     private employees: string[] = [];
 
-    constructor(n: string) {
-        this.name = n;
+    constructor(private readonly id: string, public name: string) {
+        // thisはクラスの中で使う
+        // this.name = n;
     }
 
     // メソッドちゃん
@@ -13,7 +13,7 @@ class Department {
     // このようにすると、クラスの外から呼び出されたときにエラーになる
     describe(this: Department) {
         //クラスの中からプロパティにアクセスするにはthisを使う
-        console.log('Department: ' + this.name);        
+        console.log(`Department (${this.id}): ${this.name}`);      
     }
 
     // 社員を追加するメソッド
@@ -30,7 +30,7 @@ class Department {
 // インスタンス化
 // newクラス名()でインスタンス化できる
 // インスタンス化したオブジェクトを変数に格納する
-const accounting = new Department('saino');
+const accounting = new Department('d1','saino');
 
 accounting.addEmployee('mkwiimatsumoto');
 accounting.addEmployee('kazuki23650214');
