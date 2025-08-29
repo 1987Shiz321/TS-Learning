@@ -201,3 +201,72 @@ console.log(employee1, Department.fiscalYear);
 ```
 
 ![a](./img/00_static.png)
+
+## TypeScript の abstract メソッド/クラス
+- 参考にしたサイト
+https://qiita.com/suema0331/items/374c0757aa00b37d98bd
+
+### TypeScript の abstractメソッド
+- 親クラスのメソッドをサブクラスでオーバーライドするように強制したい場合、abstractメソッド使います
+- abstractメソッドでは、具体的なメソッドの処理を書かず、戻り値のみを設定します
+```typescript
+  abstract describe(this: Department): void; //{};を削除、戻り値を設定
+```
+
+### ポイント
+- abstractメソッドは、abstractクラスからしか使用できません
+- abstract クラスは、インスタンス化ができません(`abstract`がついているクラスは、継承されることが前提のクラスということです)
+- サブクラスで、必ず親クラスのabstractメソッドを実装します(親クラスでは実装がされていないため)
+
+```typescript
+//親クラス
+
+abstract class Department {
+  static fiscalYear = 2021;
+  protected employees: string[] = [];
+
+  static createEmployee(name: string) {
+    return { name: name };
+  }
+
+  constructor(protected readonly id: string, public name: string) {
+    console.log(Department.fiscalYear);
+  }
+
+  abstract describe(this: Department): void;
+
+}
+```
+
+```typescript
+//サブクラス1
+
+class ITDepartment extends Department {
+  admins: string[];
+  constructor(id: string, admins: string[]) {
+    super(id, 'IT');
+    this.admins = admins;
+  }
+
+  //親クラスのabstractメソッドをサブクラスで実装する必要がある
+  describe() { 
+    console.log('IT部署 - ID: ' + this.id);
+  }
+}
+
+//サブクラス2
+
+class AccountingDepartment extends Department {
+  private lastReport: string;
+
+  constructor(id: string, private reports: string[]) {
+    super(id, 'Accounting');
+    this.lastReport = reports[0];
+  }
+
+  //親クラスのabstractメソッドをサブクラスで実装する必要がある
+  describe() {
+    console.log('会計部署 - ID: ' + this.id);
+  }
+}
+```
