@@ -270,3 +270,57 @@ class AccountingDepartment extends Department {
   }
 }
 ```
+
+## TypeScriptのインターフェース
+
+### 概要
+- TypeScriptのインターフェースは、オブジェクトの構造を宣言するため機能です
+- インターフェースでは、プロパティと型のみ宣言します
+- インターフェースはJavaScriptにない、TypeScritptの機能です
+
+### インターフェースの使い方
+- implements で、指定したインターフェースを実装します。実装したクラスを実装クラスと言います
+- インターフェース実装クラスでは、インターフェースに宣言されているプロパティ・メソッドが、必ず実装されている必要があります
+- インターフェース実装クラスに、インターフェースで定義されている以外のプロパティ、メソッドも追加可能です
+- インターフェースは、変数の型として使う事ができます
+```typescript
+//インタフェース
+interface Greetable {
+  name: string;   //プロパティの型のみ宣言
+  greet(phrase: string): void;  //メソッドの構造のみ宣言
+}
+
+
+//実装クラス (複数のインターフェースも実装可能)
+class Person implements Greetable { 
+   //インターフェースの定義以外のプロパティ、メソッドも追加可能
+  name: string;
+  age = 3;
+
+  constructor(n: string) {
+    this.name = n;
+  }
+  
+  //インタフェースのメソッドを実装
+  greet(phrase: string) { 
+    console.log(phrase + ' ' + this.name);
+  }
+}
+
+
+let villagerA : Greetable; //インターフェースを変数の型として使える
+let heroA : Greetable;  
+
+villagerA = new Person('村人A');  //PersonクラスのオブジェクトはGreetableを実装している
+heroA = new Person('勇者A');   //同じ構造のオブジェクトを生成できる
+
+villagerA.greet('Hello I am'); //greetメソッドを持つことを担保されている
+heroA.greet('May the Force be with you, '); 
+
+// villagerAオブジェクトの具体的な構造を気にせず、Greetableインターフェイスの greetメソッドが使える
+// villagerAオブジェクトがPerson型のクラスなのか、他の型のクラスなのか、気にしなくてOKです
+```
+
+### インターフェース と type の違い
+- インターフェース：オブジェクトの構造を記述することのみできます。複数なクラスで同じ機能を実装したいときに使う
+- type：構造や、union型など様々な型を定義できます。用途が広い事は、メリットにもデメリットにもなります
