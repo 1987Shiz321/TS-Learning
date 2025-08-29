@@ -324,3 +324,123 @@ heroA.greet('May the Force be with you, ');
 ### インターフェース と type の違い
 - インターフェース：オブジェクトの構造を記述することのみできます。複数なクラスで同じ機能を実装したいときに使う
 - type：構造や、union型など様々な型を定義できます。用途が広い事は、メリットにもデメリットにもなります
+
+### インターフェース と abstructクラス の違い
+- abstructクラス：抽象メソッドも、具体メソッドも含めることができます
+- インターフェース：メソッドを宣言するのみで、内部で実装できません
+
+### インターフェースの修飾子
+- インターフェースのプロパティを readonly に指定してプロパティを初期化の時に一度だけ設定できるようにします
+- この場合、実装クラスでも、readonly のプロパティになります
+
+```typescript
+//インターフェース
+interface Greetable {
+  readonly name: string;
+  greet(phrase: string): void;
+}
+
+ //実装クラス
+class Person implements Greetable { 
+  name: string;  //interfaceでreadonlyに指定してるのでreadonlyになる
+  age = 3;
+
+  constructor(n: string) {
+    this.name = n;
+  }
+
+  greet(phrase: string) { 
+    console.log(phrase + ' ' + this.name);
+  }
+}
+```
+
+### インターフェースの継承
+- インターフェースでも継承が可能です
+- インターフェースを細分化して定義することで、実装クラスに実装を強制する範囲を、クラスごとに変更することができます
+  - 1個のインターフェースにたくさん構造を宣言してしまうと実装クラスで全部実装する必要がある
+  - クラスによっては実装する必要がないものもあるから、インターフェースを小分けして、必要な分だけ取り込む、といったことをしていこうぜって話
+- インターフェースは複数のインターフェースを継承可能です
+  - cf: クラスは、単一のクラスのみ継承可能
+- 実装クラスで、複数のインターフェースを指定して実装する事も可能です
+```typescript
+// インターフェースを継承可能
+interface Greetable extends Named , AnotherInterface
+
+// 複数のインターフェースを指定して実装する事も可能
+class Person implements Greetable , Named { ... }
+```
+```typescript
+
+interface Named {
+  readonly name: string;
+}
+
+//Greetable とNamed  両方合わせたインターフェースを作成
+interface Greetable extends Named {  //実装クラスに、Named のプロパティも持つことを強制できる
+  greet(phrase: string): void;
+}
+
+
+//実装クラス
+class Person implements Greetable {
+  name: string;
+  age = 3;
+
+  constructor(n: string) {
+    this.name = n;
+  }
+
+  greet(phrase: string) {
+    console.log(phrase + ' ' + this.name);
+  }
+}
+```
+
+### optionalなプロパティ・メソッドを定義する
+- 実装クラスに、プロパティが存在するかどうかを強制しない事ができます
+  - 実装クラスに、インターフェースのプロパティが有ってもなくてもいいよ〜という事です
+- インターフェースでプロパティに`?`をつけます
+  - ex: `outputName?:string`
+- インターフェースでプロパティに?をつけ、実装クラス内でも、`?`で任意に設定する事が可能です
+- コンストラクタに`?`を設定するか、デフォルト値を設定する事で、インスタンス化する際に引数があってもなくても良いように設定できます
+  - ex: `constructor(n?: string)`
+  - ex: `constructor(n: string = '')`
+- メソッドも?をつけて、optionalにすることができます
+  - `greet?() : void;`
+```typescript
+interface Named {
+  readonly name?: string;
+  outputName?: string; //outputNameプロパティは実装クラスに必要ではない
+}
+
+interface Greetable extends Named {
+  greet(phrase: string): void;
+}
+
+
+//実装クラス
+class Person implements Greetable {
+  //実装クラス内で、任意に設定可能
+  name?: string;
+  age = 30;
+
+  constructor(n?: string) { //もしnが存在したら、プロパティに値を設定する
+    if (n) {
+      this.name = n;  
+    }
+  }
+
+  greet(phrase: string) {
+    if (this.name) { //nameがあれば
+      console.log(phrase + ' ' + this.name);
+    } else {
+      console.log('Hi!');
+    }
+  }
+}
+
+let villager1: Greetable;
+villager1 = new Person(); //引数がなくてもOK
+villager1.greet('Hello I am'); //Hi!
+```
