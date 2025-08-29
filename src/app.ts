@@ -1,8 +1,14 @@
 // クラスの頭文字は大文字で始めるのが慣例
 class Department {
+    static fiscalYear = 2024;
     // privateはクラスの中でしかアクセスできないし、継承したクラスからもアクセスできない
     // protectedはクラスの中と継承したクラスからアクセスできる
     protected employees: string[] = [];
+
+    // staticはクラスのインスタンスを作成しなくてもアクセスできる
+    static createEmployee(name: string) {
+        return { name: name };
+    }
 
     constructor(private readonly id: string, public name: string) {
         // thisはクラスの中で使う
@@ -39,13 +45,31 @@ class ITDepartment extends Department {
 }
 
 class AccountingDepartment extends Department {
+    private lastReport: string;
+
+    get mostRecentReport() {
+        // lastReportが存在する場合はそれを返し、存在しない場合はエラーを投げる
+        if (this.lastReport) {
+            return this.lastReport;
+        }
+        throw new Error('No report found.');
+    }
+
+    set mostRecentReport(value: string) {
+        if (!value) {
+            throw new Error('Please pass in a valid value!');
+        }
+        this.addReport(value);
+    }
+
     constructor(id: string, private reports: string[]) {
         super(id, 'Accounting'); //親クラスのコンストラクタを呼び出す.
-        this.reports = reports;
+        this.lastReport = reports[0] ?? ''; //reports配列の最初の要素をlastReportに設定する.配列が空の場合は空文字を設定する
     }
     
     addReport(text: string) {
         this.reports.push(text);
+        this.lastReport = text;
     }
 
     printReports() {
@@ -62,6 +86,10 @@ class AccountingDepartment extends Department {
     }
 }
 
+// staticメソッドの呼び出し
+// クラス名.メソッド名()で呼び出せる
+const employee1 = Department.createEmployee('Shigeru Miyamoto');
+console.log(employee1, Department.fiscalYear);
 
 // インスタンス化
 // newクラス名()でインスタンス化できる
@@ -78,8 +106,11 @@ const it01 = new ITDepartment('d2', ['mkwiimatsumoto']);
 console.log(it01);
 
 const accounting2 = new AccountingDepartment('d3', []);
+accounting2.mostRecentReport = 'Year End Report'; //mostRecentReportのセッターを呼び出す
 accounting2.addReport('Something went wrong...');
 accounting2.printReports();
+// mostRecentReportのゲッターを呼び出す.()は不要.
+console.log(accounting2.mostRecentReport);
 
 accounting2.addEmployee('hikakin');
 accounting2.addEmployee('seikin');
@@ -92,6 +123,8 @@ accounting2.printEmployeeInformation();
 // };
 
 // accountingCopy.describe(); //undefinedになる
+
+
 
 // 練習.ウマ娘の名前と二つ名を格納するクラス
 class Umamusume {

@@ -144,3 +144,60 @@ console.log(b) // b is not defined 
   console.log(b); // 0
 }
 ```
+
+# 20250829
+## 69. staticメソッド&プロパティ
+
+- 参考にしたサイト\
+https://qiita.com/suema0331/items/d28b0e0fdfa1ba8572bb
+
+### 概要
+- static プロパティ/メソッドを使うと、`new`でクラスのインスタンスを作らずとも、クラスのプロパティ、メソッドを使うことができる
+  - クラスに **utilityメソッド(複数箇所で使う便利ツール) を用意して、外部で使う場合**などに便利
+- staticプロパティは、インスタンスからアクセスできないので、コンストラクタやstatic以外のメソッドからはアクセスできない
+  - 例えば Mathクラスのメソッドも、Mathクラスをnewしなくても使える。そんな感じ
+```typescript
+// staticメソッドの例
+Math.pow();
+```
+
+### staticプロパティの作成
+- staticプロパティには、`this.(プロパティ)`のようにはアクセスできない。
+  - thisは、クラスを基に作られたインスタンスを指すから！
+- 代わりにクラス名を指定することで、staticプロパティにアクセスが可能！
+
+```typescript
+ class Department {
+  static fiscalYear = 2021; //staticプロパティ
+  protected employees: string[] = [];
+
+  constructor(protected readonly id: string, public name: string) {
+    //console.log(this.fiscalYear); //NG
+    console.log(Department.fiscalYear); //OK
+  }
+}
+```
+
+### staticメソッドの作成
+- メソッド名に`static`をつけることで、`new`しなくても外部で利用が可能
+```typescript
+ class Department {
+  static fiscalYear = 2021; //staticプロパティ
+  protected employees: string[] = [];
+
+  constructor(protected readonly id: string, public name: string) {
+    console.log(Department.fiscalYear);
+  }
+
+  static createEmployee(name: string) { //staticメソッド
+    return { name: name };
+  }
+}
+
+
+const employee1 = Department.createEmployee('NEKO'); //newしなくても使える
+console.log(employee1, Department.fiscalYear);
+
+```
+
+![a](./img/00_static.png)
