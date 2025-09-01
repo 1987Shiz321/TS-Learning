@@ -444,3 +444,66 @@ let villager1: Greetable;
 villager1 = new Person(); //引数がなくてもOK
 villager1.greet('Hello I am'); //Hi!
 ```
+
+# 250901
+## 高度な型
+### 型キャストの２種類の方法
+- 方法①：<HTMLInputElement>を前につける
+```TypeScript
+const userInputElement = <HTMLInputElement>document.getElementById("user-input”)!;
+```
+- 方法②：asキーワードで型を指定
+```typescript
+userInputElement as HTMLInputElement
+```
+
+#### コードサンプル
+```TS
+//型キャスト①<HTMLInputElement>を前につける
+
+const userInputElement = <HTMLInputElement>document.getElementById("user-input")!; // HTMLInputElement
+
+//型キャスト②asキーワードで型を指定
+//inputタグの存在に確証がある場合は!をつける
+
+const userInputElement = document.getElementById( // HTMLInputElement
+    'user-input',
+)! as HTMLInputElement ;
+```
+
+```TS
+//型キャスト②asキーワードで型を指定
+//nullではないことに確証がない場合
+
+const userInputElement = document.getElementById( 'user-input' ) ;
+
+if (userInputElement) {
+  (userInputElement as HTMLInputElement).value = 'こんにちは';
+}
+```
+
+どちらでもよいが、Reactのライブラリを用いる可能性を考慮すると、①の書き方ではReactの構文と類似してしまうことから②を採用することが望ましい。
+
+### インデックス型の使い方
+- プロパティの正確な名前、個数は指定したくないとき、 インデックス型を使います
+```TS
+[prop: string]: string; //プロパティにstringを格納
+```
+- 名前がわかっているプロパティがある場合、名前を指定して同時に定義することもできる
+```TS
+id : string; //idのプロパティが存在すると分かっているプロパティがある場合
+```
+#### コードサンプル
+```TS
+interface ErrorContainer {
+  [prop: string]: string;
+}
+
+//stringと認識できるプロパティは自由に追加可能
+const errorBag: ErrorContainer = {
+  email: '正しいメールアドレスではありません',
+  //email: 1,  // NG
+  1: 'エラー' , // OK 文字列と解釈されるため
+  username: 'ユーザ名に記号を含めることはできません', //自由に追加可能
+};
+```
